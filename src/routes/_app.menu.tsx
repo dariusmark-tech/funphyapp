@@ -7,7 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useState } from "react";
 import {
   Bell, Volume2, Palette, Info, RefreshCw, LogOut, Trash2,
-  ShieldCheck, ShoppingBag, Dumbbell, User as UserIcon,
+  ShieldCheck, ShoppingBag, Dumbbell, User as UserIcon, Trophy,
 } from "lucide-react";
 import {
   Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle,
@@ -93,9 +93,12 @@ function MenuPage() {
         />
       </div>
 
-      <div className="mt-4 grid grid-cols-3 gap-2">
+      <div className="mt-4 grid grid-cols-4 gap-2">
         <Link to="/profile" className="glass flex flex-col items-center gap-1 rounded-2xl p-3 text-xs">
           <UserIcon className="h-4 w-4" /> Profile
+        </Link>
+        <Link to="/leaderboard" className="glass flex flex-col items-center gap-1 rounded-2xl p-3 text-xs">
+          <Trophy className="h-4 w-4" /> Ranks
         </Link>
         <Link to="/practice" className="glass flex flex-col items-center gap-1 rounded-2xl p-3 text-xs">
           <Dumbbell className="h-4 w-4" /> Practice
