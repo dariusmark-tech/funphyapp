@@ -22,6 +22,7 @@ import { Route as AppPracticeRouteImport } from './routes/_app.practice'
 import { Route as AppMiniGamesRouteImport } from './routes/_app.mini-games'
 import { Route as AppMenuRouteImport } from './routes/_app.menu'
 import { Route as AppLearningRouteImport } from './routes/_app.learning'
+import { Route as AppLeaderboardRouteImport } from './routes/_app.leaderboard'
 import { Route as AppGameMapRouteImport } from './routes/_app.game-map'
 import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
 import { Route as AppAdminRouteImport } from './routes/_app.admin'
@@ -100,6 +101,11 @@ const AppMenuRoute = AppMenuRouteImport.update({
 const AppLearningRoute = AppLearningRouteImport.update({
   id: '/learning',
   path: '/learning',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppLeaderboardRoute = AppLeaderboardRouteImport.update({
+  id: '/leaderboard',
+  path: '/leaderboard',
   getParentRoute: () => AppRoute,
 } as any)
 const AppGameMapRoute = AppGameMapRouteImport.update({
@@ -187,6 +193,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AppAdminRouteWithChildren
   '/dashboard': typeof AppDashboardRoute
   '/game-map': typeof AppGameMapRoute
+  '/leaderboard': typeof AppLeaderboardRoute
   '/learning': typeof AppLearningRouteWithChildren
   '/menu': typeof AppMenuRoute
   '/mini-games': typeof AppMiniGamesRoute
@@ -215,6 +222,7 @@ export interface FileRoutesByTo {
   '/placement': typeof PlacementRoute
   '/dashboard': typeof AppDashboardRoute
   '/game-map': typeof AppGameMapRoute
+  '/leaderboard': typeof AppLeaderboardRoute
   '/menu': typeof AppMenuRoute
   '/mini-games': typeof AppMiniGamesRoute
   '/practice': typeof AppPracticeRoute
@@ -245,6 +253,7 @@ export interface FileRoutesById {
   '/_app/admin': typeof AppAdminRouteWithChildren
   '/_app/dashboard': typeof AppDashboardRoute
   '/_app/game-map': typeof AppGameMapRoute
+  '/_app/leaderboard': typeof AppLeaderboardRoute
   '/_app/learning': typeof AppLearningRouteWithChildren
   '/_app/menu': typeof AppMenuRoute
   '/_app/mini-games': typeof AppMiniGamesRoute
@@ -276,6 +285,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/dashboard'
     | '/game-map'
+    | '/leaderboard'
     | '/learning'
     | '/menu'
     | '/mini-games'
@@ -304,6 +314,7 @@ export interface FileRouteTypes {
     | '/placement'
     | '/dashboard'
     | '/game-map'
+    | '/leaderboard'
     | '/menu'
     | '/mini-games'
     | '/practice'
@@ -333,6 +344,7 @@ export interface FileRouteTypes {
     | '/_app/admin'
     | '/_app/dashboard'
     | '/_app/game-map'
+    | '/_app/leaderboard'
     | '/_app/learning'
     | '/_app/menu'
     | '/_app/mini-games'
@@ -454,6 +466,13 @@ declare module '@tanstack/react-router' {
       path: '/learning'
       fullPath: '/learning'
       preLoaderRoute: typeof AppLearningRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/leaderboard': {
+      id: '/_app/leaderboard'
+      path: '/leaderboard'
+      fullPath: '/leaderboard'
+      preLoaderRoute: typeof AppLeaderboardRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/game-map': {
@@ -602,6 +621,7 @@ interface AppRouteChildren {
   AppAdminRoute: typeof AppAdminRouteWithChildren
   AppDashboardRoute: typeof AppDashboardRoute
   AppGameMapRoute: typeof AppGameMapRoute
+  AppLeaderboardRoute: typeof AppLeaderboardRoute
   AppLearningRoute: typeof AppLearningRouteWithChildren
   AppMenuRoute: typeof AppMenuRoute
   AppMiniGamesRoute: typeof AppMiniGamesRoute
@@ -620,6 +640,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppAdminRoute: AppAdminRouteWithChildren,
   AppDashboardRoute: AppDashboardRoute,
   AppGameMapRoute: AppGameMapRoute,
+  AppLeaderboardRoute: AppLeaderboardRoute,
   AppLearningRoute: AppLearningRouteWithChildren,
   AppMenuRoute: AppMenuRoute,
   AppMiniGamesRoute: AppMiniGamesRoute,
@@ -647,13 +668,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
