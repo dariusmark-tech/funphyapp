@@ -9,38 +9,397 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as PlacementRouteImport } from './routes/placement'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as AdminSignupRouteImport } from './routes/admin-signup'
+import { Route as AdminLoginRouteImport } from './routes/admin-login'
+import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AppVectorRacerRouteImport } from './routes/_app.vector-racer'
+import { Route as AppShopRouteImport } from './routes/_app.shop'
+import { Route as AppProfileRouteImport } from './routes/_app.profile'
+import { Route as AppPracticeRouteImport } from './routes/_app.practice'
+import { Route as AppMiniGamesRouteImport } from './routes/_app.mini-games'
+import { Route as AppMenuRouteImport } from './routes/_app.menu'
+import { Route as AppLearningRouteImport } from './routes/_app.learning'
+import { Route as AppGameMapRouteImport } from './routes/_app.game-map'
+import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
+import { Route as AppAdminRouteImport } from './routes/_app.admin'
+import { Route as AppLearningIndexRouteImport } from './routes/_app.learning.index'
+import { Route as AppAdminIndexRouteImport } from './routes/_app.admin.index'
+import { Route as AppModulesIdRouteImport } from './routes/_app.modules.$id'
+import { Route as AppMiniGameSlugRouteImport } from './routes/_app.mini-game.$slug'
+import { Route as AppLearningVideosRouteImport } from './routes/_app.learning.videos'
+import { Route as AppLearningReferencesRouteImport } from './routes/_app.learning.references'
+import { Route as AppLearningNotesRouteImport } from './routes/_app.learning.notes'
+import { Route as AppAdminUsersRouteImport } from './routes/_app.admin.users'
+import { Route as AppAdminSettingsRouteImport } from './routes/_app.admin.settings'
+import { Route as AppLessonsIdIndexRouteImport } from './routes/_app.lessons.$id.index'
+import { Route as AppLessonsIdPosttestRouteImport } from './routes/_app.lessons.$id.posttest'
+import { Route as AppLessonsIdAssessmentRouteImport } from './routes/_app.lessons.$id.assessment'
 
+const PlacementRoute = PlacementRouteImport.update({
+  id: '/placement',
+  path: '/placement',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminSignupRoute = AdminSignupRouteImport.update({
+  id: '/admin-signup',
+  path: '/admin-signup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminLoginRoute = AdminLoginRouteImport.update({
+  id: '/admin-login',
+  path: '/admin-login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppRoute = AppRouteImport.update({
+  id: '/_app',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppVectorRacerRoute = AppVectorRacerRouteImport.update({
+  id: '/vector-racer',
+  path: '/vector-racer',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppShopRoute = AppShopRouteImport.update({
+  id: '/shop',
+  path: '/shop',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppProfileRoute = AppProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppPracticeRoute = AppPracticeRouteImport.update({
+  id: '/practice',
+  path: '/practice',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppMiniGamesRoute = AppMiniGamesRouteImport.update({
+  id: '/mini-games',
+  path: '/mini-games',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppMenuRoute = AppMenuRouteImport.update({
+  id: '/menu',
+  path: '/menu',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppLearningRoute = AppLearningRouteImport.update({
+  id: '/learning',
+  path: '/learning',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppGameMapRoute = AppGameMapRouteImport.update({
+  id: '/game-map',
+  path: '/game-map',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppDashboardRoute = AppDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAdminRoute = AppAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppLearningIndexRoute = AppLearningIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppLearningRoute,
+} as any)
+const AppAdminIndexRoute = AppAdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppAdminRoute,
+} as any)
+const AppModulesIdRoute = AppModulesIdRouteImport.update({
+  id: '/modules/$id',
+  path: '/modules/$id',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppMiniGameSlugRoute = AppMiniGameSlugRouteImport.update({
+  id: '/mini-game/$slug',
+  path: '/mini-game/$slug',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppLearningVideosRoute = AppLearningVideosRouteImport.update({
+  id: '/videos',
+  path: '/videos',
+  getParentRoute: () => AppLearningRoute,
+} as any)
+const AppLearningReferencesRoute = AppLearningReferencesRouteImport.update({
+  id: '/references',
+  path: '/references',
+  getParentRoute: () => AppLearningRoute,
+} as any)
+const AppLearningNotesRoute = AppLearningNotesRouteImport.update({
+  id: '/notes',
+  path: '/notes',
+  getParentRoute: () => AppLearningRoute,
+} as any)
+const AppAdminUsersRoute = AppAdminUsersRouteImport.update({
+  id: '/users',
+  path: '/users',
+  getParentRoute: () => AppAdminRoute,
+} as any)
+const AppAdminSettingsRoute = AppAdminSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AppAdminRoute,
+} as any)
+const AppLessonsIdIndexRoute = AppLessonsIdIndexRouteImport.update({
+  id: '/lessons/$id/',
+  path: '/lessons/$id/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppLessonsIdPosttestRoute = AppLessonsIdPosttestRouteImport.update({
+  id: '/lessons/$id/posttest',
+  path: '/lessons/$id/posttest',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppLessonsIdAssessmentRoute = AppLessonsIdAssessmentRouteImport.update({
+  id: '/lessons/$id/assessment',
+  path: '/lessons/$id/assessment',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin-login': typeof AdminLoginRoute
+  '/admin-signup': typeof AdminSignupRoute
+  '/login': typeof LoginRoute
+  '/placement': typeof PlacementRoute
+  '/admin': typeof AppAdminRouteWithChildren
+  '/dashboard': typeof AppDashboardRoute
+  '/game-map': typeof AppGameMapRoute
+  '/learning': typeof AppLearningRouteWithChildren
+  '/menu': typeof AppMenuRoute
+  '/mini-games': typeof AppMiniGamesRoute
+  '/practice': typeof AppPracticeRoute
+  '/profile': typeof AppProfileRoute
+  '/shop': typeof AppShopRoute
+  '/vector-racer': typeof AppVectorRacerRoute
+  '/admin/settings': typeof AppAdminSettingsRoute
+  '/admin/users': typeof AppAdminUsersRoute
+  '/learning/notes': typeof AppLearningNotesRoute
+  '/learning/references': typeof AppLearningReferencesRoute
+  '/learning/videos': typeof AppLearningVideosRoute
+  '/mini-game/$slug': typeof AppMiniGameSlugRoute
+  '/modules/$id': typeof AppModulesIdRoute
+  '/admin/': typeof AppAdminIndexRoute
+  '/learning/': typeof AppLearningIndexRoute
+  '/lessons/$id/assessment': typeof AppLessonsIdAssessmentRoute
+  '/lessons/$id/posttest': typeof AppLessonsIdPosttestRoute
+  '/lessons/$id/': typeof AppLessonsIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/admin-login': typeof AdminLoginRoute
+  '/admin-signup': typeof AdminSignupRoute
+  '/login': typeof LoginRoute
+  '/placement': typeof PlacementRoute
+  '/dashboard': typeof AppDashboardRoute
+  '/game-map': typeof AppGameMapRoute
+  '/menu': typeof AppMenuRoute
+  '/mini-games': typeof AppMiniGamesRoute
+  '/practice': typeof AppPracticeRoute
+  '/profile': typeof AppProfileRoute
+  '/shop': typeof AppShopRoute
+  '/vector-racer': typeof AppVectorRacerRoute
+  '/admin/settings': typeof AppAdminSettingsRoute
+  '/admin/users': typeof AppAdminUsersRoute
+  '/learning/notes': typeof AppLearningNotesRoute
+  '/learning/references': typeof AppLearningReferencesRoute
+  '/learning/videos': typeof AppLearningVideosRoute
+  '/mini-game/$slug': typeof AppMiniGameSlugRoute
+  '/modules/$id': typeof AppModulesIdRoute
+  '/admin': typeof AppAdminIndexRoute
+  '/learning': typeof AppLearningIndexRoute
+  '/lessons/$id/assessment': typeof AppLessonsIdAssessmentRoute
+  '/lessons/$id/posttest': typeof AppLessonsIdPosttestRoute
+  '/lessons/$id': typeof AppLessonsIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_app': typeof AppRouteWithChildren
+  '/admin-login': typeof AdminLoginRoute
+  '/admin-signup': typeof AdminSignupRoute
+  '/login': typeof LoginRoute
+  '/placement': typeof PlacementRoute
+  '/_app/admin': typeof AppAdminRouteWithChildren
+  '/_app/dashboard': typeof AppDashboardRoute
+  '/_app/game-map': typeof AppGameMapRoute
+  '/_app/learning': typeof AppLearningRouteWithChildren
+  '/_app/menu': typeof AppMenuRoute
+  '/_app/mini-games': typeof AppMiniGamesRoute
+  '/_app/practice': typeof AppPracticeRoute
+  '/_app/profile': typeof AppProfileRoute
+  '/_app/shop': typeof AppShopRoute
+  '/_app/vector-racer': typeof AppVectorRacerRoute
+  '/_app/admin/settings': typeof AppAdminSettingsRoute
+  '/_app/admin/users': typeof AppAdminUsersRoute
+  '/_app/learning/notes': typeof AppLearningNotesRoute
+  '/_app/learning/references': typeof AppLearningReferencesRoute
+  '/_app/learning/videos': typeof AppLearningVideosRoute
+  '/_app/mini-game/$slug': typeof AppMiniGameSlugRoute
+  '/_app/modules/$id': typeof AppModulesIdRoute
+  '/_app/admin/': typeof AppAdminIndexRoute
+  '/_app/learning/': typeof AppLearningIndexRoute
+  '/_app/lessons/$id/assessment': typeof AppLessonsIdAssessmentRoute
+  '/_app/lessons/$id/posttest': typeof AppLessonsIdPosttestRoute
+  '/_app/lessons/$id/': typeof AppLessonsIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/admin-login'
+    | '/admin-signup'
+    | '/login'
+    | '/placement'
+    | '/admin'
+    | '/dashboard'
+    | '/game-map'
+    | '/learning'
+    | '/menu'
+    | '/mini-games'
+    | '/practice'
+    | '/profile'
+    | '/shop'
+    | '/vector-racer'
+    | '/admin/settings'
+    | '/admin/users'
+    | '/learning/notes'
+    | '/learning/references'
+    | '/learning/videos'
+    | '/mini-game/$slug'
+    | '/modules/$id'
+    | '/admin/'
+    | '/learning/'
+    | '/lessons/$id/assessment'
+    | '/lessons/$id/posttest'
+    | '/lessons/$id/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/admin-login'
+    | '/admin-signup'
+    | '/login'
+    | '/placement'
+    | '/dashboard'
+    | '/game-map'
+    | '/menu'
+    | '/mini-games'
+    | '/practice'
+    | '/profile'
+    | '/shop'
+    | '/vector-racer'
+    | '/admin/settings'
+    | '/admin/users'
+    | '/learning/notes'
+    | '/learning/references'
+    | '/learning/videos'
+    | '/mini-game/$slug'
+    | '/modules/$id'
+    | '/admin'
+    | '/learning'
+    | '/lessons/$id/assessment'
+    | '/lessons/$id/posttest'
+    | '/lessons/$id'
+  id:
+    | '__root__'
+    | '/'
+    | '/_app'
+    | '/admin-login'
+    | '/admin-signup'
+    | '/login'
+    | '/placement'
+    | '/_app/admin'
+    | '/_app/dashboard'
+    | '/_app/game-map'
+    | '/_app/learning'
+    | '/_app/menu'
+    | '/_app/mini-games'
+    | '/_app/practice'
+    | '/_app/profile'
+    | '/_app/shop'
+    | '/_app/vector-racer'
+    | '/_app/admin/settings'
+    | '/_app/admin/users'
+    | '/_app/learning/notes'
+    | '/_app/learning/references'
+    | '/_app/learning/videos'
+    | '/_app/mini-game/$slug'
+    | '/_app/modules/$id'
+    | '/_app/admin/'
+    | '/_app/learning/'
+    | '/_app/lessons/$id/assessment'
+    | '/_app/lessons/$id/posttest'
+    | '/_app/lessons/$id/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AppRoute: typeof AppRouteWithChildren
+  AdminLoginRoute: typeof AdminLoginRoute
+  AdminSignupRoute: typeof AdminSignupRoute
+  LoginRoute: typeof LoginRoute
+  PlacementRoute: typeof PlacementRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/placement': {
+      id: '/placement'
+      path: '/placement'
+      fullPath: '/placement'
+      preLoaderRoute: typeof PlacementRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin-signup': {
+      id: '/admin-signup'
+      path: '/admin-signup'
+      fullPath: '/admin-signup'
+      preLoaderRoute: typeof AdminSignupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin-login': {
+      id: '/admin-login'
+      path: '/admin-login'
+      fullPath: '/admin-login'
+      preLoaderRoute: typeof AdminLoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_app': {
+      id: '/_app'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,11 +407,242 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_app/vector-racer': {
+      id: '/_app/vector-racer'
+      path: '/vector-racer'
+      fullPath: '/vector-racer'
+      preLoaderRoute: typeof AppVectorRacerRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/shop': {
+      id: '/_app/shop'
+      path: '/shop'
+      fullPath: '/shop'
+      preLoaderRoute: typeof AppShopRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/profile': {
+      id: '/_app/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof AppProfileRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/practice': {
+      id: '/_app/practice'
+      path: '/practice'
+      fullPath: '/practice'
+      preLoaderRoute: typeof AppPracticeRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/mini-games': {
+      id: '/_app/mini-games'
+      path: '/mini-games'
+      fullPath: '/mini-games'
+      preLoaderRoute: typeof AppMiniGamesRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/menu': {
+      id: '/_app/menu'
+      path: '/menu'
+      fullPath: '/menu'
+      preLoaderRoute: typeof AppMenuRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/learning': {
+      id: '/_app/learning'
+      path: '/learning'
+      fullPath: '/learning'
+      preLoaderRoute: typeof AppLearningRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/game-map': {
+      id: '/_app/game-map'
+      path: '/game-map'
+      fullPath: '/game-map'
+      preLoaderRoute: typeof AppGameMapRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/dashboard': {
+      id: '/_app/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AppDashboardRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/admin': {
+      id: '/_app/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AppAdminRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/learning/': {
+      id: '/_app/learning/'
+      path: '/'
+      fullPath: '/learning/'
+      preLoaderRoute: typeof AppLearningIndexRouteImport
+      parentRoute: typeof AppLearningRoute
+    }
+    '/_app/admin/': {
+      id: '/_app/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AppAdminIndexRouteImport
+      parentRoute: typeof AppAdminRoute
+    }
+    '/_app/modules/$id': {
+      id: '/_app/modules/$id'
+      path: '/modules/$id'
+      fullPath: '/modules/$id'
+      preLoaderRoute: typeof AppModulesIdRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/mini-game/$slug': {
+      id: '/_app/mini-game/$slug'
+      path: '/mini-game/$slug'
+      fullPath: '/mini-game/$slug'
+      preLoaderRoute: typeof AppMiniGameSlugRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/learning/videos': {
+      id: '/_app/learning/videos'
+      path: '/videos'
+      fullPath: '/learning/videos'
+      preLoaderRoute: typeof AppLearningVideosRouteImport
+      parentRoute: typeof AppLearningRoute
+    }
+    '/_app/learning/references': {
+      id: '/_app/learning/references'
+      path: '/references'
+      fullPath: '/learning/references'
+      preLoaderRoute: typeof AppLearningReferencesRouteImport
+      parentRoute: typeof AppLearningRoute
+    }
+    '/_app/learning/notes': {
+      id: '/_app/learning/notes'
+      path: '/notes'
+      fullPath: '/learning/notes'
+      preLoaderRoute: typeof AppLearningNotesRouteImport
+      parentRoute: typeof AppLearningRoute
+    }
+    '/_app/admin/users': {
+      id: '/_app/admin/users'
+      path: '/users'
+      fullPath: '/admin/users'
+      preLoaderRoute: typeof AppAdminUsersRouteImport
+      parentRoute: typeof AppAdminRoute
+    }
+    '/_app/admin/settings': {
+      id: '/_app/admin/settings'
+      path: '/settings'
+      fullPath: '/admin/settings'
+      preLoaderRoute: typeof AppAdminSettingsRouteImport
+      parentRoute: typeof AppAdminRoute
+    }
+    '/_app/lessons/$id/': {
+      id: '/_app/lessons/$id/'
+      path: '/lessons/$id'
+      fullPath: '/lessons/$id/'
+      preLoaderRoute: typeof AppLessonsIdIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/lessons/$id/posttest': {
+      id: '/_app/lessons/$id/posttest'
+      path: '/lessons/$id/posttest'
+      fullPath: '/lessons/$id/posttest'
+      preLoaderRoute: typeof AppLessonsIdPosttestRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/lessons/$id/assessment': {
+      id: '/_app/lessons/$id/assessment'
+      path: '/lessons/$id/assessment'
+      fullPath: '/lessons/$id/assessment'
+      preLoaderRoute: typeof AppLessonsIdAssessmentRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
+interface AppAdminRouteChildren {
+  AppAdminSettingsRoute: typeof AppAdminSettingsRoute
+  AppAdminUsersRoute: typeof AppAdminUsersRoute
+  AppAdminIndexRoute: typeof AppAdminIndexRoute
+}
+
+const AppAdminRouteChildren: AppAdminRouteChildren = {
+  AppAdminSettingsRoute: AppAdminSettingsRoute,
+  AppAdminUsersRoute: AppAdminUsersRoute,
+  AppAdminIndexRoute: AppAdminIndexRoute,
+}
+
+const AppAdminRouteWithChildren = AppAdminRoute._addFileChildren(
+  AppAdminRouteChildren,
+)
+
+interface AppLearningRouteChildren {
+  AppLearningNotesRoute: typeof AppLearningNotesRoute
+  AppLearningReferencesRoute: typeof AppLearningReferencesRoute
+  AppLearningVideosRoute: typeof AppLearningVideosRoute
+  AppLearningIndexRoute: typeof AppLearningIndexRoute
+}
+
+const AppLearningRouteChildren: AppLearningRouteChildren = {
+  AppLearningNotesRoute: AppLearningNotesRoute,
+  AppLearningReferencesRoute: AppLearningReferencesRoute,
+  AppLearningVideosRoute: AppLearningVideosRoute,
+  AppLearningIndexRoute: AppLearningIndexRoute,
+}
+
+const AppLearningRouteWithChildren = AppLearningRoute._addFileChildren(
+  AppLearningRouteChildren,
+)
+
+interface AppRouteChildren {
+  AppAdminRoute: typeof AppAdminRouteWithChildren
+  AppDashboardRoute: typeof AppDashboardRoute
+  AppGameMapRoute: typeof AppGameMapRoute
+  AppLearningRoute: typeof AppLearningRouteWithChildren
+  AppMenuRoute: typeof AppMenuRoute
+  AppMiniGamesRoute: typeof AppMiniGamesRoute
+  AppPracticeRoute: typeof AppPracticeRoute
+  AppProfileRoute: typeof AppProfileRoute
+  AppShopRoute: typeof AppShopRoute
+  AppVectorRacerRoute: typeof AppVectorRacerRoute
+  AppMiniGameSlugRoute: typeof AppMiniGameSlugRoute
+  AppModulesIdRoute: typeof AppModulesIdRoute
+  AppLessonsIdAssessmentRoute: typeof AppLessonsIdAssessmentRoute
+  AppLessonsIdPosttestRoute: typeof AppLessonsIdPosttestRoute
+  AppLessonsIdIndexRoute: typeof AppLessonsIdIndexRoute
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppAdminRoute: AppAdminRouteWithChildren,
+  AppDashboardRoute: AppDashboardRoute,
+  AppGameMapRoute: AppGameMapRoute,
+  AppLearningRoute: AppLearningRouteWithChildren,
+  AppMenuRoute: AppMenuRoute,
+  AppMiniGamesRoute: AppMiniGamesRoute,
+  AppPracticeRoute: AppPracticeRoute,
+  AppProfileRoute: AppProfileRoute,
+  AppShopRoute: AppShopRoute,
+  AppVectorRacerRoute: AppVectorRacerRoute,
+  AppMiniGameSlugRoute: AppMiniGameSlugRoute,
+  AppModulesIdRoute: AppModulesIdRoute,
+  AppLessonsIdAssessmentRoute: AppLessonsIdAssessmentRoute,
+  AppLessonsIdPosttestRoute: AppLessonsIdPosttestRoute,
+  AppLessonsIdIndexRoute: AppLessonsIdIndexRoute,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AppRoute: AppRouteWithChildren,
+  AdminLoginRoute: AdminLoginRoute,
+  AdminSignupRoute: AdminSignupRoute,
+  LoginRoute: LoginRoute,
+  PlacementRoute: PlacementRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -7,10 +7,10 @@ import {
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
-import { useEffect, type ReactNode } from "react";
+import { AuthProvider } from "@/hooks/use-auth";
+import { SettingsProvider } from "@/hooks/use-settings";
 
 import appCss from "../styles.css?url";
-import { reportLovableError } from "../lib/lovable-error-reporting";
 
 function NotFoundComponent() {
   return (
@@ -37,9 +37,6 @@ function NotFoundComponent() {
 function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   console.error(error);
   const router = useRouter();
-  useEffect(() => {
-    reportLovableError(error, { boundary: "tanstack_root_error_component" });
-  }, [error]);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
@@ -77,14 +74,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "FUNPHY1 — Fundamental Physics 1" },
+      { name: "description", content: "Fundamental Physics 1 (FUNPHY1) — learn mechanics through an adventure game with assessments, levels, and a story conclusion." },
+      { name: "author", content: "FUNPHY1" },
+      { property: "og:title", content: "FUNPHY1 — Fundamental Physics 1" },
+      { property: "og:description", content: "Fundamental Physics 1 (FUNPHY1) — learn mechanics through an adventure game with assessments, levels, and a story conclusion." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "FUNPHY1 — Fundamental Physics 1" },
+      { name: "twitter:description", content: "Fundamental Physics 1 (FUNPHY1) — learn mechanics through an adventure game with assessments, levels, and a story conclusion." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/6c8a3734-823d-4c9e-bf86-2112525bbd90/id-preview-db4d3ca6--e7339307-48e5-4275-815f-c214efd98490.lovable.app-1778409667212.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/6c8a3734-823d-4c9e-bf86-2112525bbd90/id-preview-db4d3ca6--e7339307-48e5-4275-815f-c214efd98490.lovable.app-1778409667212.png" },
     ],
     links: [
       {
@@ -99,7 +100,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   errorComponent: ErrorComponent,
 });
 
-function RootShell({ children }: { children: ReactNode }) {
+
+function RootShell({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <head>
@@ -118,8 +120,11 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <Outlet />
+      <SettingsProvider>
+        <AuthProvider>
+          <Outlet />
+        </AuthProvider>
+      </SettingsProvider>
     </QueryClientProvider>
   );
 }
