@@ -53,8 +53,13 @@ function LeaderboardPage() {
       )}
 
       {error && (
-        <div className="glass mt-4 rounded-2xl p-4 text-sm text-destructive">
-          Could not load leaderboard. {(error as Error).message}
+        <div className="glass mt-4 space-y-2 rounded-2xl p-4 text-sm">
+          <p className="text-destructive font-bold">Leaderboard not set up</p>
+          <p className="text-muted-foreground text-xs">{(error as Error).message}</p>
+          <p className="text-muted-foreground text-xs">
+            Run the SQL in <code>docs/leaderboard.sql.md</code> in your Supabase SQL Editor,
+            then refresh this page.
+          </p>
         </div>
       )}
 
