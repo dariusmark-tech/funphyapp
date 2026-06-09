@@ -15,6 +15,14 @@ export const Route = createFileRoute("/_app/dashboard")({
       .select("placement_completed")
       .eq("id", s.session.user.id)
       .maybeSingle();
+    if (!prof) {
+      await supabase.rpc("ensure_profile", {
+        _display_name: s.session.user.user_metadata?.display_name ?? null,
+        _school_id: s.session.user.user_metadata?.school_id ?? null,
+        _linked_professor_code: s.session.user.user_metadata?.linked_professor_code ?? null,
+      });
+      throw redirect({ to: "/placement" });
+    }
     if (prof && !prof.placement_completed) throw redirect({ to: "/placement" });
   },
   component: Home,
