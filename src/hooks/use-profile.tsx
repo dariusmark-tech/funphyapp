@@ -28,9 +28,17 @@ export function useProfile() {
         .from("profiles")
         .select("*")
         .eq("id", user!.id)
-        .single();
+        .maybeSingle();
       if (error) throw error;
-      return data as Profile;
+      if (data) return data as Profile;
+
+      const { data: created, error: createError } = await supabase.rpc("ensure_profile", {
+        _display_name: user!.user_metadata?.display_name ?? null,
+        _school_id: user!.user_metadata?.school_id ?? null,
+        _linked_professor_code: user!.user_metadata?.linked_professor_code ?? null,
+      });
+      if (createError) throw createError;
+      return created as Profile;
     },
   });
 }

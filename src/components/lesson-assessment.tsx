@@ -55,14 +55,17 @@ export function LessonAssessment({ lessonId }: { lessonId: string }) {
     },
   });
 
+  const lessonModuleId = lesson?.module_id;
+
   const { data: siblings } = useQuery({
-    queryKey: ["assessment-siblings", lesson?.module_id],
-    enabled: !!lesson?.module_id,
+    queryKey: ["assessment-siblings", lessonModuleId],
+    enabled: !!lessonModuleId,
     queryFn: async () => {
+      if (!lessonModuleId) return [];
       const { data, error } = await supabase
         .from("lessons")
         .select("id, title, order_index")
-        .eq("module_id", lesson!.module_id)
+        .eq("module_id", lessonModuleId)
         .order("order_index");
       if (error) throw error;
       return data ?? [];

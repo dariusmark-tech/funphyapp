@@ -43,14 +43,17 @@ function LessonReader() {
   });
 
   // Sibling lessons in the same module — for Prev / Next navigation
+  const lessonModuleId = lesson?.module_id;
+
   const { data: siblings } = useQuery({
-    queryKey: ["lesson-siblings", lesson?.module_id],
-    enabled: !!lesson?.module_id,
+    queryKey: ["lesson-siblings", lessonModuleId],
+    enabled: !!lessonModuleId,
     queryFn: async () => {
+      if (!lessonModuleId) return [];
       const { data } = await supabase
         .from("lessons")
         .select("id, title, order_index")
-        .eq("module_id", lesson!.module_id)
+        .eq("module_id", lessonModuleId)
         .order("order_index");
       return data ?? [];
     },

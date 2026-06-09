@@ -105,7 +105,7 @@ export type Database = {
           equations: Json
           id: string
           key_points: Json
-          module_id: string
+          module_id: string | null
           order_index: number
           text_content: string | null
           title: string
@@ -117,7 +117,7 @@ export type Database = {
           equations?: Json
           id?: string
           key_points?: Json
-          module_id: string
+          module_id?: string | null
           order_index: number
           text_content?: string | null
           title: string
@@ -129,7 +129,7 @@ export type Database = {
           equations?: Json
           id?: string
           key_points?: Json
-          module_id?: string
+          module_id?: string | null
           order_index?: number
           text_content?: string | null
           title?: string
@@ -319,7 +319,7 @@ export type Database = {
           is_checkpoint: boolean
           lesson_id: string | null
           module_id: string | null
-          passing_score: number | null
+          passing_score: number
           time_limit_seconds: number
           title: string
         }
@@ -329,7 +329,7 @@ export type Database = {
           is_checkpoint?: boolean
           lesson_id?: string | null
           module_id?: string | null
-          passing_score?: number | null
+          passing_score?: number
           time_limit_seconds?: number
           title: string
         }
@@ -339,7 +339,7 @@ export type Database = {
           is_checkpoint?: boolean
           lesson_id?: string | null
           module_id?: string | null
-          passing_score?: number | null
+          passing_score?: number
           time_limit_seconds?: number
           title?: string
         }
@@ -416,7 +416,7 @@ export type Database = {
           id: string
           lesson_id: string | null
           module_id: string | null
-          posttest_passed: boolean | null
+          posttest_passed: boolean
           posttest_score: number | null
           score: number | null
           user_id: string
@@ -428,7 +428,7 @@ export type Database = {
           id?: string
           lesson_id?: string | null
           module_id?: string | null
-          posttest_passed?: boolean | null
+          posttest_passed?: boolean
           posttest_score?: number | null
           score?: number | null
           user_id: string
@@ -440,7 +440,7 @@ export type Database = {
           id?: string
           lesson_id?: string | null
           module_id?: string | null
-          posttest_passed?: boolean | null
+          posttest_passed?: boolean
           posttest_score?: number | null
           score?: number | null
           user_id?: string
@@ -529,16 +529,61 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      grant_admin_role:
-        | { Args: { _invite_code: string }; Returns: boolean }
-        | {
-            Args: {
-              _invite_code: string
-              _professor_code?: string
-              _school_id?: string
-            }
-            Returns: boolean
-          }
+      ensure_profile: {
+        Args: {
+          _display_name?: string
+          _linked_professor_code?: string
+          _school_id?: string
+        }
+        Returns: {
+          avatar_url: string | null
+          created_at: string
+          current_module_id: string | null
+          display_name: string | null
+          email: string | null
+          gems: number
+          hearts: number
+          id: string
+          last_active_date: string
+          last_heart_at: string
+          league: string
+          linked_professor_code: string | null
+          max_streak: number
+          physics_score: number
+          placement_completed: boolean
+          professor_code: string | null
+          school_id: string | null
+          streak: number
+          updated_at: string
+          xp: number
+        }
+        SetofOptions: {
+          from: "*"
+          to: "profiles"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      get_leaderboard: {
+        Args: { _limit?: number }
+        Returns: {
+          avatar_url: string
+          display_name: string
+          league: string
+          rank: number
+          streak: number
+          user_id: string
+          xp: number
+        }[]
+      }
+      grant_admin_role: {
+        Args: {
+          _invite_code: string
+          _professor_code?: string
+          _school_id?: string
+        }
+        Returns: boolean
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
