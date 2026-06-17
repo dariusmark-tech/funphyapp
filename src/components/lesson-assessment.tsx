@@ -5,7 +5,7 @@ import { useMemo, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { useRefreshProfile } from "@/hooks/use-profile";
-import { ArrowRight, CheckCircle2, ChevronLeft, RotateCw, Trophy, XCircle } from "lucide-react";
+import { ArrowRight, CheckCircle2, ChevronLeft, RotateCw, Trophy } from "lucide-react";
 import { toast } from "sonner";
 
 type Question = {
@@ -87,10 +87,6 @@ export function LessonAssessment({ lessonId }: { lessonId: string }) {
   const idx = siblings?.findIndex((s) => s.id === lessonId) ?? -1;
   const nextLesson = siblings && idx >= 0 && idx < siblings.length - 1 ? siblings[idx + 1] : null;
 
-  const isCorrectChoice = (question: Question, choiceIndex: number) => {
-    const picked = answers[question.id];
-    return picked === choiceIndex && correctness[question.id] === true;
-  };
 
   const submit = useMutation({
     mutationFn: async () => {
