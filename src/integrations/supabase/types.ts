@@ -576,6 +576,14 @@ export type Database = {
           xp: number
         }[]
       }
+      grade_quiz: {
+        Args: { _answers: Json; _quiz_id: string }
+        Returns: {
+          correct_answer: string
+          is_correct: boolean
+          question_id: string
+        }[]
+      }
       grant_admin_role: {
         Args: {
           _invite_code: string
