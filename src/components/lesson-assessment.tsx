@@ -16,7 +16,7 @@ type Question = {
 };
 
 const LETTERS = ["A", "B", "C", "D", "E", "F"];
-const normalize = (value: string) => value.trim().toLowerCase();
+
 
 export function LessonAssessment({ lessonId }: { lessonId: string }) {
   const router = useRouter();
