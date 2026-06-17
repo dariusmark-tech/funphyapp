@@ -37,13 +37,20 @@ function AdminLoginPage() {
     setBusy(true);
     try {
       const { data, error } = await supabase.auth.signInWithPassword({ email, password: pwd });
-      if (error) throw new Error("Invalid admin credentials. Please try again.");
+      if (error) throw new Error(error.message || "Invalid admin credentials. Please try again.");
+      // Ensure profile row exists (uses school_id from user_metadata if available)
+      await supabase.rpc("ensure_profile", {
+        _school_id: schoolId,
+      });
       const { data: prof } = await supabase
         .from("profiles")
         .select("school_id")
         .eq("id", data.user.id)
         .maybeSingle();
-      if (!prof || (prof.school_id ?? "").trim() !== schoolId.trim()) {
+      const profSchool = (prof?.school_id ?? "").trim();
+      const metaSchool = ((data.user.user_metadata as any)?.school_id ?? "").trim();
+      const entered = schoolId.trim();
+      if (entered !== profSchool && entered !== metaSchool) {
         await supabase.auth.signOut();
         throw new Error("School ID does not match this account.");
       }
