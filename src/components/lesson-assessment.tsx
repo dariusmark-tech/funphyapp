@@ -12,7 +12,6 @@ type Question = {
   id: string;
   question_text: string;
   choices: string[];
-  correct_answer: string;
   order_index: number;
 };
 
@@ -27,6 +26,7 @@ export function LessonAssessment({ lessonId }: { lessonId: string }) {
 
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<Record<string, number>>({});
+  const [correctness, setCorrectness] = useState<Record<string, boolean>>({});
   const [result, setResult] = useState<{ correct: number; pct: number; passed: boolean } | null>(null);
 
   const { data: lesson } = useQuery({
@@ -47,7 +47,7 @@ export function LessonAssessment({ lessonId }: { lessonId: string }) {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("quizzes")
-        .select("id, passing_score, questions(id, question_text, choices, correct_answer, order_index)")
+        .select("id, passing_score, questions(id, question_text, choices, order_index)")
         .eq("lesson_id", lessonId)
         .maybeSingle();
       if (error) throw error;
@@ -87,18 +87,38 @@ export function LessonAssessment({ lessonId }: { lessonId: string }) {
   const idx = siblings?.findIndex((s) => s.id === lessonId) ?? -1;
   const nextLesson = siblings && idx >= 0 && idx < siblings.length - 1 ? siblings[idx + 1] : null;
 
-  const isCorrectChoice = (question: Question, choiceIndex: number) =>
-    normalize(question.choices[choiceIndex] ?? "") === normalize(question.correct_answer);
+  const isCorrectChoice = (question: Question, choiceIndex: number) => {
+    const picked = answers[question.id];
+    return picked === choiceIndex && correctness[question.id] === true;
+  };
 
   const submit = useMutation({
     mutationFn: async () => {
       if (!user) throw new Error("Please sign in before saving your assessment.");
       if (!lesson) throw new Error("Lesson is still loading. Please try again.");
+      if (!quiz?.id) throw new Error("Quiz unavailable.");
 
-      const correct = questions.reduce(
-        (count, q) => count + (answers[q.id] !== undefined && isCorrectChoice(q, answers[q.id]) ? 1 : 0),
-        0,
-      );
+      // Build answer payload: { [question_id]: selected choice text }
+      const payload: Record<string, string> = {};
+      for (const q of questions) {
+        const idx = answers[q.id];
+        if (idx !== undefined) payload[q.id] = q.choices[idx] ?? "";
+      }
+
+      const { data: graded, error: gradeError } = await supabase.rpc("grade_quiz", {
+        _quiz_id: quiz.id,
+        _answers: payload,
+      });
+      if (gradeError) throw gradeError;
+
+      const correctMap: Record<string, boolean> = {};
+      let correct = 0;
+      for (const row of (graded ?? []) as Array<{ question_id: string; is_correct: boolean }>) {
+        correctMap[row.question_id] = row.is_correct;
+        if (row.is_correct) correct += 1;
+      }
+      setCorrectness(correctMap);
+
       const pct = total ? Math.round((correct / total) * 100) : 0;
       const passed = pct >= passing;
 
