@@ -312,8 +312,6 @@ export function LessonAssessment({ lessonId }: { lessonId: string }) {
               <div className="mt-4 space-y-2">
                 {current.choices.map((choice, i) => {
                   const isPicked = picked === i;
-                  const isCorrect = picked !== null && isCorrectChoice(current, i);
-                  const isWrongPick = isPicked && !isCorrectChoice(current, i);
                   return (
                     <motion.button
                       key={`${current.id}-${choice}`}
@@ -322,19 +320,16 @@ export function LessonAssessment({ lessonId }: { lessonId: string }) {
                       onClick={() => choose(i)}
                       whileTap={{ scale: 0.98 }}
                       className={`flex w-full items-start gap-2 rounded-2xl border-2 px-3 py-2.5 text-left text-xs font-medium transition-all ${
-                        isCorrect
+                        isPicked
                           ? "border-primary bg-primary/10 text-primary"
-                          : isWrongPick
-                            ? "border-destructive bg-destructive/10 text-destructive"
-                            : "border-border bg-background hover:border-primary/60"
+                          : "border-border bg-background hover:border-primary/60"
                       }`}
                     >
                       <span className="mt-0.5 grid h-4 w-4 shrink-0 place-items-center rounded-full border-2 border-current text-[10px] font-black">
                         {LETTERS[i] ?? i + 1}
                       </span>
                       <span className="flex-1">{choice}</span>
-                      {isCorrect && <CheckCircle2 className="h-4 w-4" />}
-                      {isWrongPick && <XCircle className="h-4 w-4" />}
+                      {isPicked && <CheckCircle2 className="h-4 w-4" />}
                     </motion.button>
                   );
                 })}
