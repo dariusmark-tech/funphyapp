@@ -40,9 +40,7 @@ function AdminLoginPage() {
       if (error) throw new Error(error.message || "Invalid admin credentials. Please try again.");
       // Ensure profile row exists (uses school_id from user_metadata if available)
       await supabase.rpc("ensure_profile", {
-        _display_name: null,
         _school_id: schoolId,
-        _linked_professor_code: null,
       });
       const { data: prof } = await supabase
         .from("profiles")
