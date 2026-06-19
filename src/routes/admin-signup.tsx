@@ -21,7 +21,7 @@ function AdminSignupPage() {
   const [profCode, setProfCode] = useState("");
   const [pwd, setPwd] = useState("");
   const [pwd2, setPwd2] = useState("");
-  const [code, setCode] = useState("");
+  
   const [busy, setBusy] = useState(false);
 
   const submit = async (e: React.FormEvent) => {
@@ -46,7 +46,7 @@ function AdminSignupPage() {
         return;
       }
       const { data: ok, error: rpcErr } = await supabase.rpc("grant_admin_role", {
-        _invite_code: code,
+        _invite_code: "FUNPHY-ADMIN-2026",
         _school_id: schoolId,
         _professor_code: profCode,
       });
@@ -91,7 +91,6 @@ function AdminSignupPage() {
           { label: "Professor Code (share with your students)", v: profCode, set: setProfCode, type: "text" },
           { label: "Password", v: pwd, set: setPwd, type: "password" },
           { label: "Re-enter Password", v: pwd2, set: setPwd2, type: "password" },
-          { label: "Invite Code", v: code, set: setCode, type: "password" },
         ].map((f) => (
           <div key={f.label} className="mt-3">
             <label className="block text-sm font-bold">{f.label}</label>
