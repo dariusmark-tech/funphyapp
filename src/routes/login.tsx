@@ -71,18 +71,6 @@ function LoginPage() {
     }
   };
 
-  const useDemo = async () => {
-    setBusy(true);
-    try {
-      await loginDemoStudent();
-      toast.success("Signed in as demo student");
-      nav({ to: "/dashboard" });
-    } catch (err: any) {
-      toast.error(err.message);
-    } finally {
-      setBusy(false);
-    }
-  };
 
   const signUp = async (e: React.FormEvent) => {
     e.preventDefault();
