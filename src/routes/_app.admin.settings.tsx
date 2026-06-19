@@ -122,6 +122,47 @@ function AdminSettings() {
         </div>
       </div>
 
+      {/* Professor code card */}
+      <div className="rounded-2xl border border-border bg-card p-4 shadow-sm">
+        <div className="flex items-center gap-2 text-[10px] uppercase tracking-wider text-muted-foreground">
+          <KeyRound className="h-3.5 w-3.5" /> Professor Code
+        </div>
+        {profCode ? (
+          <div className="mt-2 flex items-center gap-2">
+            <code className="flex-1 truncate rounded-lg bg-secondary px-3 py-2 text-sm font-bold tracking-wide">
+              {profCode}
+            </code>
+            <button
+              onClick={copyCode}
+              className="inline-flex items-center gap-1 rounded-lg border border-border bg-background px-3 py-2 text-xs font-bold hover:bg-muted"
+            >
+              <Copy className="h-3.5 w-3.5" /> Copy
+            </button>
+          </div>
+        ) : (
+          <p className="mt-2 text-[11px] text-muted-foreground">
+            Set a code so students can link to your class and see your assignments.
+          </p>
+        )}
+        <div className="mt-2 flex gap-2">
+          <input
+            value={codeInput}
+            onChange={(e) => setCodeInput(e.target.value)}
+            placeholder={profCode ? "Change code" : "e.g. PHYS-101"}
+            className="flex-1 rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-[var(--neon)]"
+          />
+          <button
+            onClick={saveProfCode}
+            disabled={savingCode || !codeInput.trim()}
+            className="inline-flex items-center gap-1 rounded-lg bg-[var(--neon)] px-3 py-2 text-xs font-bold text-primary-foreground disabled:opacity-50"
+          >
+            <Save className="h-3.5 w-3.5" /> {savingCode ? "…" : "Save"}
+          </button>
+        </div>
+      </div>
+
+
+
       <div className="divide-y divide-border rounded-2xl border border-border bg-card shadow-sm">
         <Row icon={Palette} label={`Appearance (${appearance === "dark" ? "Dark" : "Light"})`}>
           <Switch
