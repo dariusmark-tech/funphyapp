@@ -204,10 +204,9 @@ function LoginPage() {
                 className="mt-1.5 w-full rounded-full border border-slate-200 bg-slate-100 px-4 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:border-primary focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/30"
               />
 
-              <label className="mt-4 block text-sm font-bold">School ID</label>
+              <label className="mt-4 block text-sm font-bold">School ID <span className="text-xs font-normal text-muted-foreground">(optional)</span></label>
               <input
                 type="text"
-                required
                 value={siSchool}
                 onChange={(e) => setSiSchool(e.target.value)}
                 className="mt-1.5 w-full rounded-full border border-slate-200 bg-slate-100 px-4 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:border-primary focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/30"
