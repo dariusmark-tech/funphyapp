@@ -45,20 +45,37 @@ function LoginPage() {
     try {
       const { data, error } = await supabase.auth.signInWithPassword({ email: siEmail, password: siPwd });
       if (error) throw error;
+      // Make sure a profile row exists (uses metadata school_id if profile has none yet)
+      await supabase.rpc("ensure_profile", {
+        _school_id: siSchool.trim() || undefined,
+      });
       const { data: prof } = await supabase
         .from("profiles")
         .select("school_id")
         .eq("id", data.user.id)
         .maybeSingle();
-      // Only enforce school ID match when the profile already has one saved
-      // AND the user entered one. Otherwise allow sign-in (profile may still
-      // be initializing right after signup).
       const savedSchool = (prof?.school_id ?? "").trim();
-      const enteredSchool = siSchool.trim();
-      if (savedSchool && enteredSchool && savedSchool !== enteredSchool) {
+      const metaSchool = ((data.user.user_metadata as any)?.school_id ?? "").trim();
+      const entered = siSchool.trim();
+      // Accept if entered matches saved or metadata, OR if neither side has a value yet.
+      const ok = !entered || !savedSchool || entered === savedSchool || entered === metaSchool;
+      if (!ok) {
         await supabase.auth.signOut();
         throw new Error("School ID does not match this account.");
       }
+      nav({ to: "/dashboard" });
+    } catch (err: any) {
+      toast.error(err.message);
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const useDemo = async () => {
+    setBusy(true);
+    try {
+      await loginDemoStudent();
+      toast.success("Signed in as demo student");
       nav({ to: "/dashboard" });
     } catch (err: any) {
       toast.error(err.message);
