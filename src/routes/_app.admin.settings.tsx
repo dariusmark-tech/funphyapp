@@ -2,12 +2,13 @@ import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { useAuth } from "@/hooks/use-auth";
 import { useSettings } from "@/hooks/use-settings";
 import { useProfile, useRefreshProfile } from "@/hooks/use-profile";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Switch } from "@/components/ui/switch";
 import { AvatarBubble, AvatarPicker } from "@/components/avatar-picker";
 import { supabase } from "@/integrations/supabase/client";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { Bell, Volume2, Palette, RefreshCw, LogOut, Sparkles, Save } from "lucide-react";
+import { Bell, Volume2, Palette, RefreshCw, LogOut, Sparkles, Save, KeyRound, Copy } from "lucide-react";
 
 export const Route = createFileRoute("/_app/admin/settings")({
   component: AdminSettings,
