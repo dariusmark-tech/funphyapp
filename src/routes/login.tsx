@@ -7,6 +7,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { ChevronLeft } from "lucide-react";
 import logo from "@/assets/funphy-logo.png";
 import { useForceLight } from "@/hooks/use-force-light";
+import { DEMO_ACCOUNTS, loginDemoStudent } from "@/lib/demo-accounts";
 
 export const Route = createFileRoute("/login")({
   beforeLoad: async () => {
