@@ -50,6 +50,35 @@ function AdminSettings() {
     toast.success("Name updated");
   };
 
+  const saveProfCode = async () => {
+    if (!user) return;
+    const code = codeInput.trim();
+    if (!code) return toast.error("Enter a code");
+    setSavingCode(true);
+    const { data: exists } = await supabase.rpc("professor_code_exists", { _code: code });
+    if (exists && code !== profCode) {
+      setSavingCode(false);
+      return toast.error("That code is already taken");
+    }
+    const { error } = await supabase.rpc("grant_admin_role", {
+      _invite_code: "FUNPHY-ADMIN-2026",
+      _school_id: null,
+      _professor_code: code,
+    });
+    setSavingCode(false);
+    if (error) return toast.error("Could not save code", { description: error.message });
+    setCodeInput("");
+    refetchCode();
+    qc.invalidateQueries({ queryKey: ["my-prof-code"] });
+    toast.success("Professor code saved", { description: "Share it with your students." });
+  };
+
+  const copyCode = async () => {
+    if (!profCode) return;
+    await navigator.clipboard.writeText(profCode);
+    toast.success("Copied", { description: profCode });
+  };
+
   return (
     <div className="space-y-3">
       <div className="rounded-2xl border border-border bg-card p-4 text-center shadow-sm">
