@@ -81,7 +81,7 @@ export async function loginDemoStudent() {
   await supabase.rpc("ensure_profile", {
     _display_name: a.displayName,
     _school_id: a.schoolId,
-    _linked_professor_code: a.linkedProfessorCode ?? null,
+    _linked_professor_code: a.linkedProfessorCode ?? undefined,
   });
 }
 
@@ -100,6 +100,6 @@ export async function loginDemoProfessor() {
   await supabase.rpc("grant_admin_role", {
     _invite_code: ADMIN_INVITE_CODE,
     _school_id: a.schoolId,
-    _professor_code: a.professorCode ?? null,
+    _professor_code: a.professorCode ?? undefined,
   });
 }
