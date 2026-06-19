@@ -85,18 +85,18 @@ function AdminSignupPage() {
         <h2 className="text-center text-2xl font-black">Create Admin Account</h2>
 
         {[
-          { label: "Email", v: email, set: setEmail, type: "email" },
-          { label: "Username", v: user, set: setUser, type: "text" },
-          { label: "Prof School ID", v: schoolId, set: setSchoolId, type: "text" },
-          { label: "Professor Code (share with your students)", v: profCode, set: setProfCode, type: "text" },
-          { label: "Password", v: pwd, set: setPwd, type: "password" },
-          { label: "Re-enter Password", v: pwd2, set: setPwd2, type: "password" },
+          { label: "Email", v: email, set: setEmail, type: "email", required: true },
+          { label: "Username", v: user, set: setUser, type: "text", required: true },
+          { label: "Prof School ID (optional)", v: schoolId, set: setSchoolId, type: "text", required: false },
+          { label: "Professor Code (optional — share with your students)", v: profCode, set: setProfCode, type: "text", required: false },
+          { label: "Password", v: pwd, set: setPwd, type: "password", required: true },
+          { label: "Re-enter Password", v: pwd2, set: setPwd2, type: "password", required: true },
         ].map((f) => (
           <div key={f.label} className="mt-3">
             <label className="block text-sm font-bold">{f.label}</label>
             <input
               type={f.type}
-              required
+              required={f.required}
               minLength={f.type === "password" ? 6 : undefined}
               value={f.v}
               onChange={(e) => f.set(e.target.value)}
