@@ -1,23 +1,85 @@
 import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { useAuth } from "@/hooks/use-auth";
 import { useSettings } from "@/hooks/use-settings";
+import { useProfile, useRefreshProfile } from "@/hooks/use-profile";
 import { Switch } from "@/components/ui/switch";
-import { Bell, Volume2, Palette, RefreshCw, LogOut } from "lucide-react";
+import { AvatarBubble, AvatarPicker } from "@/components/avatar-picker";
+import { supabase } from "@/integrations/supabase/client";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
+import { Bell, Volume2, Palette, RefreshCw, LogOut, Sparkles, Save } from "lucide-react";
 
 export const Route = createFileRoute("/_app/admin/settings")({
   component: AdminSettings,
 });
 
 function AdminSettings() {
-  const { signOut } = useAuth();
+  const { user, signOut } = useAuth();
   const router = useRouter();
+  const { data: profile } = useProfile();
+  const refresh = useRefreshProfile();
   const { appearance, notifications, sounds, setAppearance, setNotifications, setSounds, playBeep, notify } =
     useSettings();
+
+  const [name, setName] = useState("");
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    if (profile?.display_name) setName(profile.display_name);
+  }, [profile?.display_name]);
+
+  const saveName = async () => {
+    if (!user || !name.trim()) return;
+    setSaving(true);
+    const { error } = await supabase.from("profiles").update({ display_name: name.trim() }).eq("id", user.id);
+    setSaving(false);
+    if (error) return toast.error("Could not save name", { description: error.message });
+    refresh();
+    toast.success("Name updated");
+  };
 
   return (
     <div className="space-y-3">
       <div className="rounded-2xl border border-border bg-card p-4 text-center shadow-sm">
         <h2 className="text-lg font-black italic text-foreground">Settings</h2>
+      </div>
+
+      {/* Profile card */}
+      <div className="rounded-2xl border border-border bg-card p-4 shadow-sm">
+        <div className="flex items-center gap-4">
+          <AvatarBubble profile={profile} size={64} />
+          <div className="flex-1 min-w-0">
+            <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Signed in as</p>
+            <p className="truncate text-xs text-muted-foreground">{user?.email}</p>
+            <AvatarPicker
+              profile={profile}
+              trigger={
+                <button className="mt-2 inline-flex items-center gap-1 rounded-full bg-secondary px-3 py-1 text-[11px] font-semibold hover:bg-secondary/80">
+                  <Sparkles className="h-3 w-3" /> Change Avatar
+                </button>
+              }
+            />
+          </div>
+        </div>
+
+        <div className="mt-3">
+          <label className="text-[10px] uppercase tracking-wider text-muted-foreground">Display name</label>
+          <div className="mt-1 flex gap-2">
+            <input
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Your name"
+              className="flex-1 rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-[var(--neon)]"
+            />
+            <button
+              onClick={saveName}
+              disabled={saving || !name.trim() || name.trim() === profile?.display_name}
+              className="inline-flex items-center gap-1 rounded-lg bg-[var(--neon)] px-3 py-2 text-xs font-bold text-primary-foreground disabled:opacity-50"
+            >
+              <Save className="h-3.5 w-3.5" /> {saving ? "…" : "Save"}
+            </button>
+          </div>
+        </div>
       </div>
 
       <div className="divide-y divide-border rounded-2xl border border-border bg-card shadow-sm">
