@@ -7,6 +7,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { ChevronLeft } from "lucide-react";
 import logo from "@/assets/funphy-logo.png";
 import { useForceLight } from "@/hooks/use-force-light";
+import { DEMO_ACCOUNTS, loginDemoStudent } from "@/lib/demo-accounts";
 
 export const Route = createFileRoute("/login")({
   beforeLoad: async () => {
@@ -44,20 +45,37 @@ function LoginPage() {
     try {
       const { data, error } = await supabase.auth.signInWithPassword({ email: siEmail, password: siPwd });
       if (error) throw error;
+      // Make sure a profile row exists (uses metadata school_id if profile has none yet)
+      await supabase.rpc("ensure_profile", {
+        _school_id: siSchool.trim() || undefined,
+      });
       const { data: prof } = await supabase
         .from("profiles")
         .select("school_id")
         .eq("id", data.user.id)
         .maybeSingle();
-      // Only enforce school ID match when the profile already has one saved
-      // AND the user entered one. Otherwise allow sign-in (profile may still
-      // be initializing right after signup).
       const savedSchool = (prof?.school_id ?? "").trim();
-      const enteredSchool = siSchool.trim();
-      if (savedSchool && enteredSchool && savedSchool !== enteredSchool) {
+      const metaSchool = ((data.user.user_metadata as any)?.school_id ?? "").trim();
+      const entered = siSchool.trim();
+      // Accept if entered matches saved or metadata, OR if neither side has a value yet.
+      const ok = !entered || !savedSchool || entered === savedSchool || entered === metaSchool;
+      if (!ok) {
         await supabase.auth.signOut();
         throw new Error("School ID does not match this account.");
       }
+      nav({ to: "/dashboard" });
+    } catch (err: any) {
+      toast.error(err.message);
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const useDemo = async () => {
+    setBusy(true);
+    try {
+      await loginDemoStudent();
+      toast.success("Signed in as demo student");
       nav({ to: "/dashboard" });
     } catch (err: any) {
       toast.error(err.message);
@@ -186,10 +204,9 @@ function LoginPage() {
                 className="mt-1.5 w-full rounded-full border border-slate-200 bg-slate-100 px-4 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:border-primary focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/30"
               />
 
-              <label className="mt-4 block text-sm font-bold">School ID</label>
+              <label className="mt-4 block text-sm font-bold">School ID <span className="text-xs font-normal text-muted-foreground">(optional)</span></label>
               <input
                 type="text"
-                required
                 value={siSchool}
                 onChange={(e) => setSiSchool(e.target.value)}
                 className="mt-1.5 w-full rounded-full border border-slate-200 bg-slate-100 px-4 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:border-primary focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/30"
@@ -206,6 +223,21 @@ function LoginPage() {
               >
                 {busy ? "..." : "Log In"}
               </button>
+
+              <div className="mt-4 rounded-2xl bg-primary/5 p-3 text-xs text-slate-700">
+                <p className="font-bold text-primary">Demo student account</p>
+                <p className="mt-0.5 text-[11px] text-slate-600">
+                  {DEMO_ACCOUNTS.student.email} · {DEMO_ACCOUNTS.student.password}
+                </p>
+                <button
+                  type="button"
+                  onClick={useDemo}
+                  disabled={busy}
+                  className="mt-2 w-full rounded-full bg-primary px-4 py-2 text-xs font-bold text-primary-foreground disabled:opacity-50"
+                >
+                  Use demo student
+                </button>
+              </div>
 
               <p className="mt-6 text-center text-xs text-muted-foreground">
                 Don't have an account?{" "}

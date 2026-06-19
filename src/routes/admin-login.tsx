@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { Toaster } from "@/components/ui/sonner";
 import logo from "@/assets/funphy-logo.png";
 import { useForceLight } from "@/hooks/use-force-light";
+import { DEMO_ACCOUNTS, loginDemoProfessor } from "@/lib/demo-accounts";
 
 export const Route = createFileRoute("/admin-login")({
   beforeLoad: async () => {
@@ -50,7 +51,8 @@ function AdminLoginPage() {
       const profSchool = (prof?.school_id ?? "").trim();
       const metaSchool = ((data.user.user_metadata as any)?.school_id ?? "").trim();
       const entered = schoolId.trim();
-      if (entered !== profSchool && entered !== metaSchool) {
+      const ok = !entered || !profSchool || entered === profSchool || entered === metaSchool;
+      if (!ok) {
         await supabase.auth.signOut();
         throw new Error("School ID does not match this account.");
       }
@@ -112,10 +114,9 @@ function AdminLoginPage() {
           className="mt-1.5 w-full rounded-full border border-slate-200 bg-slate-100 px-4 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
         />
 
-        <label className="mt-4 block text-sm font-bold">Prof School ID</label>
+        <label className="mt-4 block text-sm font-bold">Prof School ID <span className="text-xs font-normal text-slate-500">(optional)</span></label>
         <input
           type="text"
-          required
           value={schoolId}
           onChange={(e) => setSchoolId(e.target.value)}
           className="mt-1.5 w-full rounded-full border border-slate-200 bg-slate-100 px-4 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
@@ -127,6 +128,32 @@ function AdminLoginPage() {
         >
           {busy ? "..." : "Log In"}
         </button>
+
+        <div className="mt-4 rounded-2xl bg-primary/5 p-3 text-xs text-slate-700">
+          <p className="font-bold text-primary">Demo professor account</p>
+          <p className="mt-0.5 text-[11px] text-slate-600">
+            {DEMO_ACCOUNTS.professor.email} · {DEMO_ACCOUNTS.professor.password}
+          </p>
+          <button
+            type="button"
+            disabled={busy}
+            onClick={async () => {
+              setBusy(true);
+              try {
+                await loginDemoProfessor();
+                toast.success("Signed in as demo professor");
+                nav({ to: "/admin" });
+              } catch (err: any) {
+                toast.error(err.message);
+              } finally {
+                setBusy(false);
+              }
+            }}
+            className="mt-2 w-full rounded-full bg-primary px-4 py-2 text-xs font-bold text-primary-foreground disabled:opacity-50"
+          >
+            Use demo professor
+          </button>
+        </div>
 
         <p className="mt-5 text-center text-xs text-slate-500">
           Need an admin account?{" "}
