@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { useProfile } from "@/hooks/use-profile";
-import { ChevronRight, Map as MapIcon, Trophy, Gem, Sparkles } from "lucide-react";
+import { ChevronRight, Map as MapIcon, Trophy, Gem, Sparkles, CalendarClock, Target } from "lucide-react";
 import { AvatarBubble, AvatarPicker } from "@/components/avatar-picker";
 
 export const Route = createFileRoute("/_app/dashboard")({
