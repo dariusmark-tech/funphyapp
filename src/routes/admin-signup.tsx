@@ -21,7 +21,7 @@ function AdminSignupPage() {
   const [profCode, setProfCode] = useState("");
   const [pwd, setPwd] = useState("");
   const [pwd2, setPwd2] = useState("");
-  const [code, setCode] = useState("");
+  
   const [busy, setBusy] = useState(false);
 
   const submit = async (e: React.FormEvent) => {
