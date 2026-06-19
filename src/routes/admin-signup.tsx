@@ -91,7 +91,6 @@ function AdminSignupPage() {
           { label: "Professor Code (share with your students)", v: profCode, set: setProfCode, type: "text" },
           { label: "Password", v: pwd, set: setPwd, type: "password" },
           { label: "Re-enter Password", v: pwd2, set: setPwd2, type: "password" },
-          { label: "Invite Code", v: code, set: setCode, type: "password" },
         ].map((f) => (
           <div key={f.label} className="mt-3">
             <label className="block text-sm font-bold">{f.label}</label>
