@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import { Toaster } from "@/components/ui/sonner";
 import logo from "@/assets/funphy-logo.png";
 import { useForceLight } from "@/hooks/use-force-light";
-import { DEMO_ACCOUNTS, loginDemoProfessor } from "@/lib/demo-accounts";
+
 
 export const Route = createFileRoute("/admin-login")({
   beforeLoad: async () => {
@@ -129,31 +129,6 @@ function AdminLoginPage() {
           {busy ? "..." : "Log In"}
         </button>
 
-        <div className="mt-4 rounded-2xl bg-primary/5 p-3 text-xs text-slate-700">
-          <p className="font-bold text-primary">Demo professor account</p>
-          <p className="mt-0.5 text-[11px] text-slate-600">
-            {DEMO_ACCOUNTS.professor.email} · {DEMO_ACCOUNTS.professor.password}
-          </p>
-          <button
-            type="button"
-            disabled={busy}
-            onClick={async () => {
-              setBusy(true);
-              try {
-                await loginDemoProfessor();
-                toast.success("Signed in as demo professor");
-                nav({ to: "/admin" });
-              } catch (err: any) {
-                toast.error(err.message);
-              } finally {
-                setBusy(false);
-              }
-            }}
-            className="mt-2 w-full rounded-full bg-primary px-4 py-2 text-xs font-bold text-primary-foreground disabled:opacity-50"
-          >
-            Use demo professor
-          </button>
-        </div>
 
         <p className="mt-5 text-center text-xs text-slate-500">
           Need an admin account?{" "}
