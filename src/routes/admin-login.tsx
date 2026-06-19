@@ -51,7 +51,8 @@ function AdminLoginPage() {
       const profSchool = (prof?.school_id ?? "").trim();
       const metaSchool = ((data.user.user_metadata as any)?.school_id ?? "").trim();
       const entered = schoolId.trim();
-      if (entered !== profSchool && entered !== metaSchool) {
+      const ok = !entered || !profSchool || entered === profSchool || entered === metaSchool;
+      if (!ok) {
         await supabase.auth.signOut();
         throw new Error("School ID does not match this account.");
       }
