@@ -43,6 +43,19 @@ function Home() {
     },
   });
 
+  const { data: assignments } = useQuery({
+    queryKey: ["student-assignments", profile?.id],
+    enabled: !!profile,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("assignments")
+        .select("*")
+        .order("deadline_date", { ascending: true });
+      if (error) throw error;
+      return data ?? [];
+    },
+  });
+
   if (!profile) return <div className="mx-auto max-w-md px-4 py-8"><div className="glass h-48 animate-pulse rounded-2xl" /></div>;
 
   const xpInLevel = profile.xp % 500;
