@@ -19,10 +19,21 @@ function AdminSettings() {
   const router = useRouter();
   const { data: profile } = useProfile();
   const refresh = useRefreshProfile();
+  const qc = useQueryClient();
   const { appearance, notifications, sounds, setAppearance, setNotifications, setSounds, playBeep, notify } =
     useSettings();
 
+  const { data: profCode, refetch: refetchCode } = useQuery({
+    queryKey: ["my-prof-code"],
+    queryFn: async () => {
+      const { data } = await supabase.rpc("my_professor_code");
+      return (data as string | null) ?? "";
+    },
+  });
+
   const [name, setName] = useState("");
+  const [codeInput, setCodeInput] = useState("");
+  const [savingCode, setSavingCode] = useState(false);
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
