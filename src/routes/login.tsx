@@ -212,20 +212,6 @@ function LoginPage() {
                 {busy ? "..." : "Log In"}
               </button>
 
-              <div className="mt-4 rounded-2xl bg-primary/5 p-3 text-xs text-slate-700">
-                <p className="font-bold text-primary">Demo student account</p>
-                <p className="mt-0.5 text-[11px] text-slate-600">
-                  {DEMO_ACCOUNTS.student.email} · {DEMO_ACCOUNTS.student.password}
-                </p>
-                <button
-                  type="button"
-                  onClick={useDemo}
-                  disabled={busy}
-                  className="mt-2 w-full rounded-full bg-primary px-4 py-2 text-xs font-bold text-primary-foreground disabled:opacity-50"
-                >
-                  Use demo student
-                </button>
-              </div>
 
               <p className="mt-6 text-center text-xs text-muted-foreground">
                 Don't have an account?{" "}
