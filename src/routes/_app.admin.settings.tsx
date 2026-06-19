@@ -62,7 +62,6 @@ function AdminSettings() {
     }
     const { error } = await supabase.rpc("grant_admin_role", {
       _invite_code: "FUNPHY-ADMIN-2026",
-      _school_id: null,
       _professor_code: code,
     });
     setSavingCode(false);
