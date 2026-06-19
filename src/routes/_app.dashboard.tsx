@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { useProfile } from "@/hooks/use-profile";
-import { ChevronRight, Map as MapIcon, Trophy, Gem, Sparkles } from "lucide-react";
+import { ChevronRight, Map as MapIcon, Trophy, Gem, Sparkles, CalendarClock, Target } from "lucide-react";
 import { AvatarBubble, AvatarPicker } from "@/components/avatar-picker";
 
 export const Route = createFileRoute("/_app/dashboard")({
@@ -40,6 +40,19 @@ function Home() {
         .limit(1)
         .maybeSingle();
       return data;
+    },
+  });
+
+  const { data: assignments } = useQuery({
+    queryKey: ["student-assignments", profile?.id],
+    enabled: !!profile,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("assignments")
+        .select("*")
+        .order("deadline_date", { ascending: true });
+      if (error) throw error;
+      return data ?? [];
     },
   });
 
@@ -107,6 +120,47 @@ function Home() {
           </span>
         </p>
       </div>
+
+      {/* Assignments from professor */}
+      <div className="glass mt-4 rounded-2xl p-4">
+        <div className="flex items-center gap-2 text-xs uppercase tracking-wider text-muted-foreground">
+          <CalendarClock className="h-3.5 w-3.5" /> Assignments
+        </div>
+        {assignments && assignments.length > 0 ? (
+          <ul className="mt-2 space-y-2">
+            {assignments.map((a) => {
+              const deadline = new Date(a.deadline_date);
+              const overdue = deadline < new Date(new Date().toDateString());
+              const progress = Math.min(100, Math.round(((profile.xp ?? 0) / Math.max(1, a.target_xp)) * 100));
+              return (
+                <li key={a.id} className="rounded-xl border border-border bg-card/60 p-3">
+                  <div className="flex items-center gap-2">
+                    <div className="grid h-8 w-8 place-items-center rounded-lg bg-[var(--neon)]/15 text-[var(--neon)]">
+                      <Target className="h-4 w-4" />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate text-sm font-bold">{a.title}</p>
+                      <p className="text-[10px] text-muted-foreground">
+                        Due {deadline.toLocaleDateString()} · {a.target_xp} XP
+                        {overdue && <span className="ml-1 font-bold text-rose-500">· past</span>}
+                      </p>
+                    </div>
+                    <span className="text-[10px] font-bold text-[var(--neon)]">{progress}%</span>
+                  </div>
+                  <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-secondary">
+                    <div className="h-full bg-[var(--neon)]" style={{ width: `${progress}%` }} />
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+        ) : (
+          <p className="mt-2 text-[11px] text-muted-foreground">
+            No assignments yet from your professor.
+          </p>
+        )}
+      </div>
+
 
       {/* Game Map CTA */}
       <Link

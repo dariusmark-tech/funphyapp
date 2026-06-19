@@ -195,11 +195,17 @@ function Assignments({ selectedDate }: { selectedDate: Date }) {
         </div>
         <button
           onClick={() => setOpen((v) => !v)}
-          className="flex items-center gap-1 rounded-full bg-[var(--neon)] px-3 py-1.5 text-[11px] font-bold text-white"
+          disabled={!myCode}
+          className="flex items-center gap-1 rounded-full bg-[var(--neon)] px-3 py-1.5 text-[11px] font-bold text-white disabled:opacity-50"
         >
           <Plus className="h-3.5 w-3.5" /> New
         </button>
       </div>
+      {!myCode && (
+        <p className="mt-2 rounded-lg bg-amber-50 px-3 py-2 text-[10px] font-bold text-amber-800">
+          Set your Professor Code in Settings so students can see your assignments.
+        </p>
+      )}
 
       {open && (
         <div className="mt-3 space-y-2 rounded-xl bg-slate-50 p-3">
