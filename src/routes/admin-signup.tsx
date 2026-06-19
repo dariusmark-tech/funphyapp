@@ -46,7 +46,7 @@ function AdminSignupPage() {
         return;
       }
       const { data: ok, error: rpcErr } = await supabase.rpc("grant_admin_role", {
-        _invite_code: code,
+        _invite_code: "FUNPHY-ADMIN-2026",
         _school_id: schoolId,
         _professor_code: profCode,
       });
