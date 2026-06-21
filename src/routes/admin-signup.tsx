@@ -116,6 +116,12 @@ function AdminSignupPage() {
           </div>
         ))}
 
+        {pwd2.length > 0 && pwd !== pwd2 && (
+          <p className="mt-2 text-xs font-semibold text-red-500">Passwords don't match</p>
+        )}
+
+
+
         <button
           disabled={busy}
           className="mx-auto mt-5 block rounded-full bg-primary px-10 py-2.5 font-bold text-primary-foreground shadow-lg shadow-primary/30 disabled:opacity-50"
