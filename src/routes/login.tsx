@@ -39,13 +39,31 @@ function LoginPage() {
   const [suPwd2, setSuPwd2] = useState("");
   const [remember, setRemember] = useState(false);
 
+  const friendly = (msg: string) => {
+    const m = (msg || "").toLowerCase();
+    if (m.includes("invalid login") || m.includes("invalid_credentials")) return "Wrong email or password.";
+    if (m.includes("email not confirmed")) return "Please confirm your email first — check your inbox.";
+    if (m.includes("already registered") || m.includes("user already")) return "That email is already registered. Try logging in.";
+    if (m.includes("rate limit")) return "Too many attempts. Please wait a moment and try again.";
+    return msg || "Something went wrong.";
+  };
+
+  const forgotPassword = async () => {
+    const email = (siEmail || window.prompt("Enter your email to reset your password:") || "").trim();
+    if (!email) return;
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: window.location.origin + "/login",
+    });
+    if (error) toast.error(friendly(error.message));
+    else toast.success("Password reset link sent. Check your email.");
+  };
+
   const signIn = async (e: React.FormEvent) => {
     e.preventDefault();
     setBusy(true);
     try {
       const { data, error } = await supabase.auth.signInWithPassword({ email: siEmail, password: siPwd });
       if (error) throw error;
-      // Make sure a profile row exists (uses metadata school_id if profile has none yet)
       await supabase.rpc("ensure_profile", {
         _school_id: siSchool.trim() || undefined,
       });
@@ -57,15 +75,15 @@ function LoginPage() {
       const savedSchool = (prof?.school_id ?? "").trim();
       const metaSchool = ((data.user.user_metadata as any)?.school_id ?? "").trim();
       const entered = siSchool.trim();
-      // Accept if entered matches saved or metadata, OR if neither side has a value yet.
       const ok = !entered || !savedSchool || entered === savedSchool || entered === metaSchool;
       if (!ok) {
         await supabase.auth.signOut();
         throw new Error("School ID does not match this account.");
       }
+      toast.success("Welcome back!");
       nav({ to: "/dashboard" });
     } catch (err: any) {
-      toast.error(err.message);
+      toast.error(friendly(err.message));
     } finally {
       setBusy(false);
     }
@@ -74,17 +92,17 @@ function LoginPage() {
 
   const signUp = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (suPwd.length < 6) return toast.error("Password must be at least 6 characters.");
     if (suPwd !== suPwd2) return toast.error("Passwords don't match");
     setBusy(true);
     try {
-      // Validate professor code exists
       const code = suProfCode.trim();
       if (code) {
         const { data: ok, error: rpcErr } = await supabase.rpc("professor_code_exists", { _code: code });
         if (rpcErr) throw rpcErr;
         if (!ok) throw new Error("Professor code not found. Ask your professor for the correct code.");
       }
-      const { error } = await supabase.auth.signUp({
+      const { data: signUpData, error } = await supabase.auth.signUp({
         email: suEmail,
         password: suPwd,
         options: {
@@ -97,10 +115,17 @@ function LoginPage() {
         },
       });
       if (error) throw error;
+      // If email confirmation is required, there is no session yet.
+      if (!signUpData.session) {
+        toast.success("Account created! Please confirm your email, then log in.");
+        setSiEmail(suEmail);
+        setView("signin");
+        return;
+      }
       toast.success("Account created!");
       nav({ to: "/placement" });
     } catch (err: any) {
-      toast.error(err.message);
+      toast.error(friendly(err.message));
     } finally {
       setBusy(false);
     }
@@ -200,7 +225,7 @@ function LoginPage() {
                 className="mt-1.5 w-full rounded-full border border-slate-200 bg-slate-100 px-4 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:border-primary focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/30"
               />
               <div className="mt-2 flex justify-end">
-                <button type="button" className="text-xs text-muted-foreground hover:text-primary">
+                <button type="button" onClick={forgotPassword} className="text-xs text-muted-foreground hover:text-primary">
                   Forgot Password?
                 </button>
               </div>
@@ -249,18 +274,18 @@ function LoginPage() {
               <h2 className="text-center text-2xl font-black">Create an Account</h2>
 
               {[
-                { label: "Email", v: suEmail, set: setSuEmail, type: "email" },
-                { label: "Username", v: suUser, set: setSuUser, type: "text" },
-                { label: "School ID", v: suSchool, set: setSuSchool, type: "text" },
-                { label: "Professor Code", v: suProfCode, set: setSuProfCode, type: "text" },
-                { label: "Password", v: suPwd, set: setSuPwd, type: "password" },
-                { label: "Re-enter Password", v: suPwd2, set: setSuPwd2, type: "password" },
+                { label: "Email", v: suEmail, set: setSuEmail, type: "email", required: true },
+                { label: "Username", v: suUser, set: setSuUser, type: "text", required: true },
+                { label: "School ID (optional)", v: suSchool, set: setSuSchool, type: "text", required: false },
+                { label: "Professor Code (optional)", v: suProfCode, set: setSuProfCode, type: "text", required: false },
+                { label: "Password", v: suPwd, set: setSuPwd, type: "password", required: true },
+                { label: "Re-enter Password", v: suPwd2, set: setSuPwd2, type: "password", required: true },
               ].map((f) => (
                 <div key={f.label} className="mt-3">
                   <label className="block text-sm font-bold">{f.label}</label>
                   <input
                     type={f.type}
-                    required
+                    required={f.required}
                     minLength={f.type === "password" ? 6 : undefined}
                     value={f.v}
                     onChange={(e) => f.set(e.target.value)}
@@ -268,6 +293,9 @@ function LoginPage() {
                   />
                 </div>
               ))}
+              {suPwd2.length > 0 && suPwd !== suPwd2 && (
+                <p className="mt-2 text-xs font-semibold text-red-500">Passwords don't match</p>
+              )}
 
               <div className="mt-4 flex items-center justify-between">
                 <button

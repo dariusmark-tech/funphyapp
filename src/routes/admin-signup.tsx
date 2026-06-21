@@ -24,12 +24,21 @@ function AdminSignupPage() {
   
   const [busy, setBusy] = useState(false);
 
+  const friendly = (msg: string) => {
+    const m = (msg || "").toLowerCase();
+    if (m.includes("already registered") || m.includes("user already")) return "That email is already registered. Try logging in.";
+    if (m.includes("invalid login") || m.includes("invalid_credentials")) return "Wrong email or password.";
+    if (m.includes("rate limit")) return "Too many attempts. Please wait a moment and try again.";
+    return msg || "Something went wrong.";
+  };
+
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (pwd.length < 6) return toast.error("Password must be at least 6 characters.");
     if (pwd !== pwd2) return toast.error("Passwords don't match");
     setBusy(true);
     try {
-      const { error } = await supabase.auth.signUp({
+      const { data: signUpData, error } = await supabase.auth.signUp({
         email,
         password: pwd,
         options: {
@@ -38,12 +47,14 @@ function AdminSignupPage() {
         },
       });
       if (error) throw error;
-      // Try to sign in immediately so we can call grant_admin_role
-      const { error: siErr } = await supabase.auth.signInWithPassword({ email, password: pwd });
-      if (siErr) {
-        toast.success("Account created — confirm your email then log in to activate admin.");
-        nav({ to: "/admin-login" });
-        return;
+      // If email confirmation is required, no session exists yet.
+      if (!signUpData.session) {
+        const { error: siErr } = await supabase.auth.signInWithPassword({ email, password: pwd });
+        if (siErr) {
+          toast.success("Account created — confirm your email then log in to activate admin.");
+          nav({ to: "/admin-login" });
+          return;
+        }
       }
       const { data: ok, error: rpcErr } = await supabase.rpc("grant_admin_role", {
         _invite_code: "FUNPHY-ADMIN-2026",
@@ -58,7 +69,7 @@ function AdminSignupPage() {
       toast.success("Admin account created!");
       nav({ to: "/admin" });
     } catch (err: any) {
-      toast.error(err.message);
+      toast.error(friendly(err.message));
     } finally {
       setBusy(false);
     }
@@ -104,6 +115,12 @@ function AdminSignupPage() {
             />
           </div>
         ))}
+
+        {pwd2.length > 0 && pwd !== pwd2 && (
+          <p className="mt-2 text-xs font-semibold text-red-500">Passwords don't match</p>
+        )}
+
+
 
         <button
           disabled={busy}
