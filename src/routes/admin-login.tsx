@@ -38,7 +38,12 @@ function AdminLoginPage() {
     setBusy(true);
     try {
       const { data, error } = await supabase.auth.signInWithPassword({ email, password: pwd });
-      if (error) throw new Error(error.message || "Invalid admin credentials. Please try again.");
+      if (error) {
+        const m = error.message.toLowerCase();
+        if (m.includes("invalid")) throw new Error("Wrong email or password.");
+        if (m.includes("email not confirmed")) throw new Error("Please confirm your email first.");
+        throw new Error(error.message);
+      }
       // Ensure profile row exists (uses school_id from user_metadata if available)
       await supabase.rpc("ensure_profile", {
         _school_id: schoolId,
