@@ -274,18 +274,18 @@ function LoginPage() {
               <h2 className="text-center text-2xl font-black">Create an Account</h2>
 
               {[
-                { label: "Email", v: suEmail, set: setSuEmail, type: "email" },
-                { label: "Username", v: suUser, set: setSuUser, type: "text" },
-                { label: "School ID", v: suSchool, set: setSuSchool, type: "text" },
-                { label: "Professor Code", v: suProfCode, set: setSuProfCode, type: "text" },
-                { label: "Password", v: suPwd, set: setSuPwd, type: "password" },
-                { label: "Re-enter Password", v: suPwd2, set: setSuPwd2, type: "password" },
+                { label: "Email", v: suEmail, set: setSuEmail, type: "email", required: true },
+                { label: "Username", v: suUser, set: setSuUser, type: "text", required: true },
+                { label: "School ID (optional)", v: suSchool, set: setSuSchool, type: "text", required: false },
+                { label: "Professor Code (optional)", v: suProfCode, set: setSuProfCode, type: "text", required: false },
+                { label: "Password", v: suPwd, set: setSuPwd, type: "password", required: true },
+                { label: "Re-enter Password", v: suPwd2, set: setSuPwd2, type: "password", required: true },
               ].map((f) => (
                 <div key={f.label} className="mt-3">
                   <label className="block text-sm font-bold">{f.label}</label>
                   <input
                     type={f.type}
-                    required
+                    required={f.required}
                     minLength={f.type === "password" ? 6 : undefined}
                     value={f.v}
                     onChange={(e) => f.set(e.target.value)}
@@ -293,6 +293,9 @@ function LoginPage() {
                   />
                 </div>
               ))}
+              {suPwd2.length > 0 && suPwd !== suPwd2 && (
+                <p className="mt-2 text-xs font-semibold text-red-500">Passwords don't match</p>
+              )}
 
               <div className="mt-4 flex items-center justify-between">
                 <button
