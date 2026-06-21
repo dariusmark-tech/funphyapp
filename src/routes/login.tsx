@@ -39,13 +39,31 @@ function LoginPage() {
   const [suPwd2, setSuPwd2] = useState("");
   const [remember, setRemember] = useState(false);
 
+  const friendly = (msg: string) => {
+    const m = (msg || "").toLowerCase();
+    if (m.includes("invalid login") || m.includes("invalid_credentials")) return "Wrong email or password.";
+    if (m.includes("email not confirmed")) return "Please confirm your email first — check your inbox.";
+    if (m.includes("already registered") || m.includes("user already")) return "That email is already registered. Try logging in.";
+    if (m.includes("rate limit")) return "Too many attempts. Please wait a moment and try again.";
+    return msg || "Something went wrong.";
+  };
+
+  const forgotPassword = async () => {
+    const email = (siEmail || window.prompt("Enter your email to reset your password:") || "").trim();
+    if (!email) return;
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: window.location.origin + "/login",
+    });
+    if (error) toast.error(friendly(error.message));
+    else toast.success("Password reset link sent. Check your email.");
+  };
+
   const signIn = async (e: React.FormEvent) => {
     e.preventDefault();
     setBusy(true);
     try {
       const { data, error } = await supabase.auth.signInWithPassword({ email: siEmail, password: siPwd });
       if (error) throw error;
-      // Make sure a profile row exists (uses metadata school_id if profile has none yet)
       await supabase.rpc("ensure_profile", {
         _school_id: siSchool.trim() || undefined,
       });
@@ -57,15 +75,15 @@ function LoginPage() {
       const savedSchool = (prof?.school_id ?? "").trim();
       const metaSchool = ((data.user.user_metadata as any)?.school_id ?? "").trim();
       const entered = siSchool.trim();
-      // Accept if entered matches saved or metadata, OR if neither side has a value yet.
       const ok = !entered || !savedSchool || entered === savedSchool || entered === metaSchool;
       if (!ok) {
         await supabase.auth.signOut();
         throw new Error("School ID does not match this account.");
       }
+      toast.success("Welcome back!");
       nav({ to: "/dashboard" });
     } catch (err: any) {
-      toast.error(err.message);
+      toast.error(friendly(err.message));
     } finally {
       setBusy(false);
     }
@@ -74,17 +92,17 @@ function LoginPage() {
 
   const signUp = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (suPwd.length < 6) return toast.error("Password must be at least 6 characters.");
     if (suPwd !== suPwd2) return toast.error("Passwords don't match");
     setBusy(true);
     try {
-      // Validate professor code exists
       const code = suProfCode.trim();
       if (code) {
         const { data: ok, error: rpcErr } = await supabase.rpc("professor_code_exists", { _code: code });
         if (rpcErr) throw rpcErr;
         if (!ok) throw new Error("Professor code not found. Ask your professor for the correct code.");
       }
-      const { error } = await supabase.auth.signUp({
+      const { data: signUpData, error } = await supabase.auth.signUp({
         email: suEmail,
         password: suPwd,
         options: {
@@ -97,10 +115,17 @@ function LoginPage() {
         },
       });
       if (error) throw error;
+      // If email confirmation is required, there is no session yet.
+      if (!signUpData.session) {
+        toast.success("Account created! Please confirm your email, then log in.");
+        setSiEmail(suEmail);
+        setView("signin");
+        return;
+      }
       toast.success("Account created!");
       nav({ to: "/placement" });
     } catch (err: any) {
-      toast.error(err.message);
+      toast.error(friendly(err.message));
     } finally {
       setBusy(false);
     }
